@@ -40,3 +40,23 @@ data["recommended_hours"] = (
     + 0.2 * data["daily_available_hours"]
     + np.random.normal(0, 0.3, n)
 ).clip(0.5, 7.0).round(2)
+
+print("=" * 55)
+print("   Smart Study Session Planner")
+print("=" * 55)
+print(f"\n[Dataset] {n} synthetic student-subject records generated.")
+print(data.head())
+
+# ─────────────────────────────────────────────
+# STEP 2: Supervised Learning – Linear Regression
+# ─────────────────────────────────────────────
+
+print("\n" + "-" * 55)
+print("PART A: Supervised Learning – Predicting Study Hours")
+print("-" * 55)
+
+features = ["subject_difficulty", "days_until_exam", "past_score", "daily_available_hours"]
+X = data[features]
+y = data["recommended_hours"]
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
