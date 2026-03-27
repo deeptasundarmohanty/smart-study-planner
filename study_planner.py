@@ -17,3 +17,26 @@ from sklearn.model_selection import train_test_split
 from sklearn.metrics import mean_absolute_error, r2_score
 import warnings
 warnings.filterwarnings("ignore")
+
+# ─────────────────────────────────────────────
+# STEP 1: Generate Synthetic Dataset
+# ─────────────────────────────────────────────
+
+np.random.seed(42)
+n = 200
+
+data = pd.DataFrame({
+    "subject_difficulty":    np.random.randint(1, 11, n),   # 1 (easy) to 10 (hard)
+    "days_until_exam":       np.random.randint(1, 31, n),   # 1 to 30 days
+    "past_score":            np.random.randint(30, 101, n), # previous exam score (%)
+    "daily_available_hours": np.random.uniform(1, 8, n),    # hours free per day
+})
+
+# Target: recommended study hours per day (realistic formula + noise)
+data["recommended_hours"] = (
+    0.4 * data["subject_difficulty"]
+    - 0.05 * data["days_until_exam"]
+    - 0.03 * data["past_score"]
+    + 0.2 * data["daily_available_hours"]
+    + np.random.normal(0, 0.3, n)
+).clip(0.5, 7.0).round(2)
